@@ -11,6 +11,9 @@ dependencies:
   bcrypt:
     specifier: ^5.1.1
     version: 5.1.1
+  http-status:
+    specifier: ^1.7.4
+    version: 1.7.4
   next:
     specifier: 14.2.0
     version: 14.2.0(react-dom@18.2.0)(react@18.2.0)
@@ -23,6 +26,9 @@ dependencies:
   react-dom:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
+  zod:
+    specifier: ^3.22.4
+    version: 3.22.4
 
 devDependencies:
   '@types/bcrypt':
@@ -1663,6 +1669,11 @@ packages:
       function-bind: 1.1.2
     dev: true
 
+  /http-status@1.7.4:
+    resolution: {integrity: sha512-c2qSwNtTlHVYAhMj9JpGdyo0No/+DiKXCJ9pHtZ2Yf3QmPnBIytKSRT7BuyIiQ7icXLynavGmxUqkOjSrAuMuA==}
+    engines: {node: '>= 0.4.0'}
+    dev: false
+
   /https-proxy-agent@5.0.1:
     resolution: {integrity: sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==}
     engines: {node: '>= 6'}
@@ -3203,3 +3214,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
