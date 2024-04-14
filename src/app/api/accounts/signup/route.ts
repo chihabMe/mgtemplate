@@ -1,4 +1,4 @@
-import { db } from "@/utils/db";
+import { db } from "@/lib/prisma";
 import { hashPassword } from "@/utils/passwords";
 import { BAD_REQUEST, CREATED } from "http-status";
 import { NextApiRequest } from "next";

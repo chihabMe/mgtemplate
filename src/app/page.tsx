@@ -5,7 +5,7 @@ import Link from "next/link";
 
 
 export default function Home() {
-  const { data, status } = useSession()
+  const { data,status } = useSession()
 
   if (status == "loading") return <h1>loading</h1>
   const isAuth = status == "authenticated"
@@ -13,7 +13,11 @@ export default function Home() {
     <main>
       {isAuth &&
         <div>
-          <h1> {JSON.stringify(data.user)}</h1>
+          <h1>email:{data.user?.email}</h1>
+          <h1>username:{data.user.username}</h1>
+          <h1>id:{data.user.id}</h1>
+          <h1>image:{data.user.image}</h1>
+          <h1>role:{data.user.role}</h1>
           <button onClick={() => signOut()} className="bg-red-400 text-white rounded-md px-2 py-1 cursor-pointer "> logout</button>
 
         </div>
