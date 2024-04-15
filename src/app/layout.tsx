@@ -4,6 +4,7 @@ import "./globals.css";
 import SessionWrapper from "@/components/wrappers/SessionWrapper";
 import { signOut } from "next-auth/react";
 import Navbar from "@/components/layout/navbar/Navbar";
+import LayoutWrapper from "@/components/wrappers/LayoutWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,8 +23,9 @@ export default function RootLayout({
       <html lang="en">
 
         <body className={inter.className}>
-          <Navbar />
-          {children}
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
         </body>
       </html>
     </SessionWrapper>
