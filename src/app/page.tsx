@@ -18,11 +18,10 @@ export default function Home() {
           <h1>id:{data.user.id}</h1>
           <h1>image:{data.user.image}</h1>
           <h1>role:{data.user.role}</h1>
-          <button onClick={() => signOut()} className="bg-red-400 text-white rounded-md px-2 py-1 cursor-pointer "> logout</button>
 
         </div>
       }
-      {!isAuth && <Link href="/accounts/signin">login</Link>}
+      {!isAuth && <Link href="/auth/signin">login</Link>}
     </main>
   );
 }

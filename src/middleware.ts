@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { UserRole } from "@prisma/client";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { TOO_MANY_REQUESTS } from "http-status";
 
 const redis = new Redis({
     url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -20,21 +21,21 @@ export default withAuth(async function middleware(req, event) {
     const ip = req.ip ?? "127.0.0.1";
     const limiter = await ratelimit.limit(`mw_${ip}`)
     event.waitUntil(limiter.pending)
-    const res = NextResponse.next(req)
-    res.headers.set("X-RateLimit-Limit",limiter.limit.toString())
-    res.headers.set("X-RateLimit-Remaning",limiter.remaining.toString())
-    res.headers.set("X-RateLimit-Reset",limiter.reset.toString())
-    if (!limiter.success)
-        return NextResponse.rewrite(new URL("/errors/blocked", req.url))
-    // Ensure the user is authenticated
-    // if (!token) {
-    //     return NextResponse.redirect(new URL("/auth/signin", req.nextUrl.basePath));
-    // }
-
-    // Check if the user has the required role for accessing admin pages
-    if (!path.startsWith("/admin") && (!token || token.role !== UserRole.ADMIN)) {
-        return NextResponse.redirect(new URL("/errors/unauthorized", req.url));
+    const res = limiter.success ? NextResponse.next() : NextResponse.rewrite(new URL("/errors/blocked", req.url), {
+        status: TOO_MANY_REQUESTS
+    });
+    res.headers.set("X-RateLimit-Limit", limiter.limit.toString())
+    res.headers.set("X-RateLimit-Remaning", limiter.remaining.toString())
+    res.headers.set("X-RateLimit-Reset", limiter.reset.toString())
+    if (!limiter.success) {
+        return res
     }
+
+    if (path.startsWith("/admin") && (!token || token.role !== UserRole.ADMIN)) {
+        return NextResponse.rewrite(new URL("/errors/unauthorized", req.url));
+    }
+
+    return res
 }, {
     callbacks: {
         // Ensure the user is authorized with the role "USER" for all pages
