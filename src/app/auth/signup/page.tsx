@@ -1,32 +1,22 @@
 "use client";
+import { clientApi } from '@/trpc/react';
+import { useRouter } from 'next/navigation';
 import React, { FormEvent, useState } from 'react';
 
 const SignupPage = () => {
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState();
+    const router = useRouter()
+    const createUser = clientApi.users.createUser.useMutation({
+        onSuccess:()=>{
+            router.push("/auth/signin")
+        }
+    })
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        try {
-            const response = await fetch('/api/accounts/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (response.ok) {
-                // Redirect user to dashboard or any other page after successful sign-up
-                window.alert('Sign up successful!');
-            } else {
-                const data = await response.json();
-                throw new Error(data.error || 'Sign up failed');
-            }
-        } catch (err) {
-            // setError(err.message);
-        }
+        createUser.mutate({ email, password, password2: password, username })
     };
 
     return (
@@ -41,6 +31,17 @@ const SignupPage = () => {
                         className='bg-gray-100 w-full py-3 px-2 rounded-md'
                     />
                 </div>
+
+                <div className='w-full'>
+                    <input
+                        type="text"
+                        value={username}
+                        placeholder='Enter your username'
+                        onChange={(e) => setUsername(e.target.value)}
+                        className='bg-gray-100 w-full py-3 px-2 rounded-md'
+                    />
+
+                </div>
                 <div className='w-full'>
                     <input
                         type="password"
@@ -51,7 +52,10 @@ const SignupPage = () => {
                     />
                 </div>
                 <button type="submit" className='mt-4 bg-blue-400 text-white rounded-md py-2'>Sign Up</button>
-                {error && <p className="text-red-500">{error}</p>}
+                {createUser.isError && <div>
+                    <p className="text-red-500">{createUser.error.message}</p>
+                </div>
+                }
             </form>
         </main>
     );
