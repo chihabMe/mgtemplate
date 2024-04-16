@@ -51,6 +51,7 @@ export const authOptions: NextAuthOptions = {
 
                 if (!user) return null
                 const valid = await comparePassword(credentials.password, user.password)
+                
                 if (!valid) return null
                 return {
                     email: user.email,
