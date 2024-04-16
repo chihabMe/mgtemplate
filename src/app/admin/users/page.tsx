@@ -14,7 +14,7 @@ async function ListOfUsers() {
     const users = await api.users.getAllUsers()
     return (
         <ul>
-            {users.data.map(user => (<li>{user.username}</li>))}
+            {users.data.map(user => (<li key={user.id}>{user.username}</li>))}
         </ul>
     )
 
