@@ -16,7 +16,7 @@ This is a template for kickstarting full stack development projects, particularl
   - TypeScript
   - TRPC
   - NextAuth for authentication
-  - MySQL (Database)
+  - Postgresql (Database)  on render
   
 - **Deployment:**
   - Frontend: Vercel
@@ -33,3 +33,16 @@ To get a local copy up and running, follow these simple steps.
 ### Prerequisites
 
 Make sure you have [Node.js](https://nodejs.org/) installed.
+
+
+env variavles
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+NEXTAUTH_SECRET="" 
+NEXTAUTH_URL=""
+UPSTASH_REDIS_REST_URL=""
+UPSTASH_REDIS_REST_TOKEN=""
+ADMIN_EMAIL=""
+ADMIN_USERNAME=""
+ADMIN_PASSWORD=""
+```
