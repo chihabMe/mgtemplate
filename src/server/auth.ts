@@ -1,6 +1,6 @@
 import { db } from "@/lib/prisma";
 import { comparePassword } from "@/utils/passwords";
-import { NextAuthOptions } from "next-auth";
+import { getServerSession, NextAuthOptions } from "next-auth";
 import CredentailProvider from "next-auth/providers/credentials"
 
 export const authOptions: NextAuthOptions = {
@@ -64,3 +64,4 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
 }
+export const getServerAuthSession = () => getServerSession(authOptions)

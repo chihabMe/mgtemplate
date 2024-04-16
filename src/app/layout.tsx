@@ -5,6 +5,7 @@ import SessionWrapper from "@/components/wrappers/SessionWrapper";
 import { signOut } from "next-auth/react";
 import Navbar from "@/components/layout/navbar/Navbar";
 import LayoutWrapper from "@/components/wrappers/LayoutWrapper";
+import { TRPCReactProvider } from "@/trpc/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,15 +20,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SessionWrapper>
-      <html lang="en">
+    <TRPCReactProvider>
+      <SessionWrapper>
+        <html lang="en">
 
-        <body className={inter.className}>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
-        </body>
-      </html>
-    </SessionWrapper>
+          <body className={inter.className}>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+          </body>
+        </html>
+      </SessionWrapper>
+    </TRPCReactProvider>
   );
 }
