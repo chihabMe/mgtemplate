@@ -20,7 +20,7 @@ const getQueryClient = () => {
     return (clientQueryClientSingleton ??= createQueryClient());
 };
 
-export const clientApi = createTRPCReact<AppRouter>();
+export const api = createTRPCReact<AppRouter>();
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
     const queryClient = getQueryClient();
@@ -60,3 +60,5 @@ function getBaseUrl() {
     if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
     return `http://localhost:${process.env.PORT ?? 3000}`;
 }
+
+export const clientApi = api
