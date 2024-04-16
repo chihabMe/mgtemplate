@@ -6,4 +6,4 @@
 ## next auth for the authentication 
 ## prisma  / mysql
 ## stripe 
-## taiwlind css / shadcn for the ui 
+## taiwlind css / shadcn for the ui # mgtemplate
