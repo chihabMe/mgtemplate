@@ -1,17 +1,22 @@
 "use client";
 import { signIn } from 'next-auth/react';
-import React, { FormEvent, useState } from 'react';
-
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+const initialForm = {
+    email: '',
+    password: ""
+}
 const SigninPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [form, setForm] = useState(initialForm)
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setForm(prev => ({ ...form, [e.target.name]: e.target.value }))
+    }
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         const result = await signIn('credentials', {
             redirect: false,
-            password,
-            email,
+            password: form["password"],
+            email: form["email"],
         });
 
         if (result && !result.error) {
@@ -29,9 +34,10 @@ const SigninPage = () => {
                 <div className='w-full'>
                     <input
                         type="text"
-                        value={email}
+                        value={form["email"]}
                         placeholder='jhon@email.com'
-                        onChange={(e) => setEmail(e.target.value)}
+                        name="email"
+                        onChange={handleChange}
 
                         className='bg-gray-100  w-full py-3 px-2 rounded-md'
                     />
@@ -39,9 +45,10 @@ const SigninPage = () => {
                 <div className='w-full'>
                     <input
                         type="password"
-                        value={password}
+                        value={form["password"]}
                         placeholder='password'
-                        onChange={(e) => setPassword(e.target.value)}
+                        name="password"
+                        onChange={handleChange}
                         className='bg-gray-50 w-full py-2 px-2 rounded-md'
                     />
                 </div>

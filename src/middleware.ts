@@ -30,6 +30,8 @@ export default withAuth(async function middleware(req, event) {
     if (!limiter.success) {
         return res
     }
+    if (token && token?.verified && path != "/auth/verify-email")
+        return NextResponse.redirect(new URL("/auth/verify-email", req.url))
 
     if (path.startsWith("/admin") && (!token || token.role !== UserRole.ADMIN)) {
         return NextResponse.rewrite(new URL("/errors/unauthorized", req.url));

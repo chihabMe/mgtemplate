@@ -20,24 +20,27 @@ interface CustomUser extends DefaultUser {
 // Override the default types of JWT and User provided by next-auth
 declare module 'next-auth/jwt' {
     interface JWT {
-        id?: string;
-        role?: UserRole
-        username?: string;
-        email?: string
-        image?: string | null
+            id?: string;
+            role?: UserRole
+            username?: string;
+            email?: string
+            image?: string | null;
+            verified: boolean;
+
 
     }
 
 }
 declare module 'next-auth' {
-    interface User extends CustomUser { }
     interface Session {
         user: {
             id?: string;
             role?: UserRole
             username?: string;
             email?: string
-            image?: string | null
+            image?: string | null;
+            verified: boolean;
+
         }
     }
 }

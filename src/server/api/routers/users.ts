@@ -49,14 +49,13 @@ export const usersRouter = createTRPCRouter({
         return user
     }),
     deleteUser: adminProtectedProcedure.input(z.object({ userID: z.string() })).query(async ({ ctx, input }) => {
-        const user = await ctx.db.user.delete({
+          await ctx.db.user.delete({
             where: {
                 id: input.userID
             }
         })
         return {
             message: "deleted",
-            data: user
         }
 
     }),

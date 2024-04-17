@@ -27,9 +27,27 @@ model User {
   password String
   role     UserRole @default(USER)
 
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([username])
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  image     String
+  createdAt DateTime @default(now())
+  Product   Product  @relation(fields: [productId], references: [id])
+  productId String
+}
+
+model Product {
+  id        String         @id @default(uuid())
+  title     String
+  price     Decimal
+  stock     Int
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  images    ProductImage[]
 }
