@@ -14,7 +14,7 @@ const ratelimit = new Ratelimit({
     redis: redis,
     limiter: Ratelimit.fixedWindow(5, "5 s"),
 });
-
+const isProd = process.env.NODE_ENV == "production"
 export default withAuth(async function middleware(req, event) {
     const path = req.nextUrl.pathname;
     const token = req.nextauth.token;
@@ -30,7 +30,8 @@ export default withAuth(async function middleware(req, event) {
     if (!limiter.success) {
         return res
     }
-    if (token && token?.verified && path != "/auth/verify-email")
+    const redirectUnVerifiedUser = token && token?.verified && path != "/auth/verify-email" && !path.startsWith("/api")
+    if (isProd && redirectUnVerifiedUser)
         return NextResponse.redirect(new URL("/auth/verify-email", req.url))
 
     if (path.startsWith("/admin") && (!token || token.role !== UserRole.ADMIN)) {
