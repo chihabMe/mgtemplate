@@ -1,4 +1,4 @@
-import { getBaseUrl } from "@/trpc/react";
+import { getBaseUrl } from "@/utils/url";
 import {
     Body,
     Container,
@@ -22,7 +22,7 @@ interface ConfirmEmailProps {
 }
 
 const baseUrl = getBaseUrl()
-export const ConfirmEmail = ({
+export const ConfirmEmailTemplate = ({
     username,
     verificationLink
 }: ConfirmEmailProps) => (
@@ -52,12 +52,12 @@ export const ConfirmEmail = ({
     </Html>
 );
 
-ConfirmEmail.PreviewProps = {
+ConfirmEmailTemplate.PreviewProps = {
     username: "chihab",
     verificationLink: "http://localhost:3000/auth/activate/23hgw9ehgtuewoghoj"
 } as ConfirmEmailProps;
 
-export default ConfirmEmail;
+export default ConfirmEmailTemplate;
 
 const button = {
     backgroundColor: "#656ee8",
