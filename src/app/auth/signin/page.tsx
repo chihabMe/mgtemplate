@@ -1,9 +1,16 @@
 "use client";
+
 import { signIn } from 'next-auth/react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { Formik } from "formik"
+import { Button } from '@/components/ui/button';
+import FormInput from '@/components/ui/ٌFormInput';
+import { toFormikValidationSchema } from "zod-formik-adapter"
+import { SigninSchema } from '@/server/auth';
 const initialForm = {
-    email: '',
-    password: ""
+    email: "",
+    password: "",
 }
 const SigninPage = () => {
     const [form, setForm] = useState(initialForm)
@@ -30,30 +37,38 @@ const SigninPage = () => {
 
     return (
         <main className='w-full min-h-screen flex justify-center items-center '>
-            <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-full max-w-[350px]'>
-                <div className='w-full'>
-                    <input
-                        type="text"
-                        value={form["email"]}
-                        placeholder='jhon@email.com'
-                        name="email"
-                        onChange={handleChange}
+            <Card className='w-full max-w-[400px]'>
+                <CardHeader>
+                    <CardTitle>Login now</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Formik
+                        initialValues={initialForm}
+                        validationSchema={toFormikValidationSchema(SigninSchema)}
+                        onSubmit={(values, actions) => {
+                            console.log(values)
+                        }}
+                    >
 
-                        className='bg-gray-100  w-full py-3 px-2 rounded-md'
-                    />
-                </div>
-                <div className='w-full'>
-                    <input
-                        type="password"
-                        value={form["password"]}
-                        placeholder='password'
-                        name="password"
-                        onChange={handleChange}
-                        className='bg-gray-50 w-full py-2 px-2 rounded-md'
-                    />
-                </div>
-                <button type="submit" className='mt-4 bg-blue-400 text-white  rounded-md  py-2'>Sign In</button>
-            </form>
+
+                        {(props) => (
+
+                            <form onSubmit={props.handleSubmit} className=''>
+                                <div className="flex flex-col space-y-4">
+                                    <FormInput />
+                                    <FormInput />
+                                    <Button type='submit'>Sign in</Button>
+                                </div>
+                                {props.touched && !props.isValid &&
+                                    <div>
+                                        <span className=''>please check your inputs</span>
+                                    </div>
+                                }
+                            </form>
+                        )}
+                    </Formik>
+                </CardContent>
+            </Card>
         </main>
     );
 };

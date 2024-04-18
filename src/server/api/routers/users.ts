@@ -5,20 +5,17 @@ import { hashPassword } from "@/utils/passwords";
 import { getBaseUrl } from "@/utils/url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod"
+export const createUserSchema = z.object({
+    email: z.string().email(),
+    username: z.string().min(4).max(20),
+    password: z.string(),
+    password2: z.string(),
 
+})
 
 export const usersRouter = createTRPCRouter({
 
-    createUser: publicProcedure.input(z.object({
-        email: z.string().email(),
-        username: z.string().min(4).max(20),
-        password: z.string(),
-        password2: z.string(),
-    }).refine((data) => data.password == data.password2, {
-        message: "Passwords don't match",
-        path: ["password2"]
-    }
-    )).mutation(async ({ ctx, input }) => {
+    createUser: publicProcedure.input(createUserSchema).mutation(async ({ ctx, input }) => {
         const exists = await ctx.db.user.findFirst({
             where: {
                 email: input.email
@@ -57,12 +54,11 @@ export const usersRouter = createTRPCRouter({
             }
         })
         const verificationLink = `${getBaseUrl()}/auth/activate/${token.userId}:${token.token}`
-        console.log(verificationLink)
-        await sendVerificationEmail({
-            to: user.email,
-            username: user.username,
-            verificationLink
-        })
+        // await sendVerificationEmail({
+        //     to: user.email,
+        //     username: user.username,
+        //     verificationLink
+        // })
         return user
     }),
     deleteUser: adminProtectedProcedure.input(z.object({ userID: z.string() })).query(async ({ ctx, input }) => {

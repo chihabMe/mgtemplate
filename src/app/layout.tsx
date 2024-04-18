@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import SessionWrapper from "@/components/wrappers/SessionWrapper";
-import { signOut } from "next-auth/react";
-import Navbar from "@/components/layout/navbar/Navbar";
 import LayoutWrapper from "@/components/wrappers/LayoutWrapper";
 import { TRPCReactProvider } from "@/trpc/react";
+import { cn } from "@/lib/utils"
+import { Inter as FontSans } from "next/font/google"
 
-const inter = Inter({ subsets: ["latin"] });
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
 export const metadata: Metadata = {
   title: "mg template ",
@@ -22,9 +24,14 @@ export default function RootLayout({
   return (
     <TRPCReactProvider>
       <SessionWrapper>
-        <html lang="en">
+        <html lang="en" className="">
 
-          <body className={inter.className}>
+          <body
+            className={cn(
+              "min-h-screen bg-background font-sans  antialiased",
+            )}
+
+          >
             <LayoutWrapper>
               {children}
             </LayoutWrapper>

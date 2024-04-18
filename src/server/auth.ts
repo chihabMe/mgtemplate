@@ -2,7 +2,8 @@ import { db } from "@/lib/prisma";
 import { comparePassword } from "@/utils/passwords";
 import { getServerSession, NextAuthOptions } from "next-auth";
 import CredentailProvider from "next-auth/providers/credentials"
-
+import * as z from "zod"
+export const SigninSchema = z.object({ email: z.string(), password: z.string() })
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     session: {

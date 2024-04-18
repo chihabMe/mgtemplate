@@ -10,7 +10,7 @@ const SignupPage = () => {
     const router = useRouter()
     const createUser = clientApi.users.createUser.useMutation({
         onSuccess:()=>{
-            router.push("/auth/signin")
+            // router.push("/auth/signin")
         }
     })
 
