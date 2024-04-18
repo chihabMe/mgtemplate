@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/trpc/react";
+import { clientApi } from "@/trpc/react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -19,6 +19,7 @@ export default function Home() {
           <h1>id:{data.user.id}</h1>
           <h1>image:{data.user.image}</h1>
           <h1>role:{data.user.role}</h1>
+          <h1>verified:{data.user.verified}</h1>
 
         </div>
       }
