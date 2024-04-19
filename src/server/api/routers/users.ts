@@ -54,6 +54,7 @@ export const usersRouter = createTRPCRouter({
             }
         })
         const verificationLink = `${getBaseUrl()}/auth/activate/${token.userId}:${token.token}`
+        console.log(verificationLink)
         // await sendVerificationEmail({
         //     to: user.email,
         //     username: user.username,

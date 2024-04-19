@@ -3,7 +3,7 @@ import { comparePassword } from "@/utils/passwords";
 import { getServerSession, NextAuthOptions } from "next-auth";
 import CredentailProvider from "next-auth/providers/credentials"
 import * as z from "zod"
-export const SigninSchema = z.object({ email: z.string(), password: z.string() })
+export const SigninSchema = z.object({ email: z.string().email(), password: z.string().min(6, "the password must contain 6 characters") })
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     session: {
@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
             authorize: async function (credentials, req) {
                 if (!credentials?.email || !credentials.password) return null;
                 const user = await db.user.findFirst({
-                    where: { email: credentials.email }
+                    where: { email: credentials.email, verified: true, active: true }
                 })
 
 

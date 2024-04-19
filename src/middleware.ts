@@ -18,18 +18,20 @@ const isProd = process.env.NODE_ENV == "production"
 export default withAuth(async function middleware(req, event) {
     const path = req.nextUrl.pathname;
     const token = req.nextauth.token;
-    const ip = req.ip ?? "127.0.0.1";
-    const limiter = await ratelimit.limit(`mw_${ip}`)
-    event.waitUntil(limiter.pending)
-    const res = limiter.success ? NextResponse.next() : NextResponse.rewrite(new URL("/errors/blocked", req.url), {
+    let res = NextResponse.next();
+    if (isProd) {
+        const ip = req.ip ?? "127.0.0.1";
+        const limiter = await ratelimit.limit(`mw_${ip}`)
+        res = limiter.success ? NextResponse.next() : NextResponse.rewrite(new URL("/errors/blocked", req.url))
+        event.waitUntil(limiter.pending)
         status: TOO_MANY_REQUESTS
-    });
-    res.headers.set("X-RateLimit-Limit", limiter.limit.toString())
-    res.headers.set("X-RateLimit-Remaning", limiter.remaining.toString())
-    res.headers.set("X-RateLimit-Reset", limiter.reset.toString())
-    if (!limiter.success) {
-        return res
-    }
+        res.headers.set("X-RateLimit-Limit", limiter.limit.toString())
+        res.headers.set("X-RateLimit-Remaning", limiter.remaining.toString())
+        res.headers.set("X-RateLimit-Reset", limiter.reset.toString())
+        if (!limiter.success) {
+            return res
+        }
+    };
     const redirectUnVerifiedUser = token && token?.verified && path != "/auth/verify-email" && !path.startsWith("/api") && !path.startsWith("/auth")
     if (redirectUnVerifiedUser)
         return NextResponse.redirect(new URL("/auth/verify-email", req.url))

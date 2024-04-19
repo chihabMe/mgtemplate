@@ -5,6 +5,7 @@ import LayoutWrapper from "@/components/wrappers/LayoutWrapper";
 import { TRPCReactProvider } from "@/trpc/react";
 import { cn } from "@/lib/utils"
 import { Inter as FontSans } from "next/font/google"
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({
             <LayoutWrapper>
               {children}
             </LayoutWrapper>
+            <Toaster />
           </body>
         </html>
       </SessionWrapper>
