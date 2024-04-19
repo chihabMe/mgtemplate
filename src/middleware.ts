@@ -32,9 +32,10 @@ export default withAuth(async function middleware(req, event) {
             return res
         }
     };
-    const redirectUnVerifiedUser = token && token?.verified && path != "/auth/verify-email" && !path.startsWith("/api") && !path.startsWith("/auth")
-    if (redirectUnVerifiedUser)
+    const redirectUnVerifiedUser = token && !token.verified && path != "/auth/verify-email" && !path.startsWith("/api") && !path.startsWith("/auth")
+    if (redirectUnVerifiedUser) {
         return NextResponse.redirect(new URL("/auth/verify-email", req.url))
+    }
 
     if (path.startsWith("/admin") && (!token || token.role !== UserRole.ADMIN)) {
         return NextResponse.rewrite(new URL("/errors/unauthorized", req.url));

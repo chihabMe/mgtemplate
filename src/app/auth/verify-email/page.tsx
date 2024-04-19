@@ -4,11 +4,17 @@ import React from 'react'
 
 const VerifyEmailPage = async () => {
     const session = await getServerAuthSession()
-    if (!session) {
+    if (!session)
         redirect("/auth/signin")
-    }
+    if (session.user.verified)
+        redirect("/")
+
     return (
-        <main> hello {session?.user.username} please verify your {session?.user.email}  email</main>
+        <main className='min-h-screen flex justify-center items-center'>
+            <div>
+                hello {session?.user.username} please verify your {session?.user.email}  email
+            </div>
+        </main>
     )
 }
 
