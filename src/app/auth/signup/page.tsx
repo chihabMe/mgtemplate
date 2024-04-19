@@ -1,62 +1,86 @@
 "use client";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { toFormikValidationSchema } from 'zod-formik-adapter'; // Assuming you're using Zod for validation
+import { Formik } from 'formik';
+import { toast } from '@/components/ui/use-toast';
 import { clientApi } from '@/trpc/react';
-import { useRouter } from 'next/navigation';
-import React, { FormEvent, useState } from 'react';
+import FormInput from '@/components/ui/ٌFormInput';
+import { createUserSchema } from '@/schemas/auth.schema';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+const initialForm = {
+    email: '',
+    username: '',
+    password: '',
+    password2: '',
+}
 
 const SignupPage = () => {
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const router = useRouter()
-    const createUser = clientApi.users.createUser.useMutation({
-        onSuccess:()=>{
-            // router.push("/auth/signin")
-        }
-    })
-
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        createUser.mutate({ email, password, password2: password, username })
-    };
+    const createUser = clientApi.users.createUser.useMutation()
 
     return (
-        <main className='w-full min-h-screen flex justify-center items-center'>
-            <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-full max-w-[350px]'>
-                <div className='w-full'>
-                    <input
-                        type="text"
-                        value={email}
-                        placeholder='Enter your email'
-                        onChange={(e) => setEmail(e.target.value)}
-                        className='bg-gray-100 w-full py-3 px-2 rounded-md'
-                    />
-                </div>
+        <main className='w-full min-h-screen flex justify-center items-center '>
+            <Card className='w-full max-w-[450px]'>
+                <CardHeader className='py-4'>
+                    <CardTitle>
+                        Sign up
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
 
-                <div className='w-full'>
-                    <input
-                        type="text"
-                        value={username}
-                        placeholder='Enter your username'
-                        onChange={(e) => setUsername(e.target.value)}
-                        className='bg-gray-100 w-full py-3 px-2 rounded-md'
-                    />
+                    <Formik
+                        initialValues={initialForm}
+                        validationSchema={toFormikValidationSchema(createUserSchema)}
+                        onSubmit={async (values, actions) => {
+                            try {
+                                await createUser.mutate({
+                                    email: values.email,
+                                    password: values.password,
+                                    password2: values.password2,
+                                    username: values.username
+                                },
+                                    {
+                                        onSuccess: () => {
+                                            toast({
+                                                title: "registred",
+                                                description: "please check your email to verify your account"
+                                            })
+                                            // router.push('/auth/signin');
+                                        },
+                                        onError: (err) => {
+                                            console.log('--------errror --------')
+                                            const error = err.data?.errors
+                                            console.log(error)
+                                            console.log('--------errror --------')
+                                            //@ts-ignore
+                                            actions.setErrors()
+                                        }
+                                    }
+                                )
+                            } catch (error) {
+                                // Handle error
+                                console.error('Signup failed:', error);
+                            }
+                        }}
+                    >
+                        {(props) => (
+                            <form onSubmit={props.handleSubmit} >
 
-                </div>
-                <div className='w-full'>
-                    <input
-                        type="password"
-                        value={password}
-                        placeholder='Enter your password'
-                        onChange={(e) => setPassword(e.target.value)}
-                        className='bg-gray-50 w-full py-2 px-2 rounded-md'
-                    />
-                </div>
-                <button type="submit" className='mt-4 bg-blue-400 text-white rounded-md py-2'>Sign Up</button>
-                {createUser.isError && <div>
-                    <p className="text-red-500">{createUser.error.message}</p>
-                </div>
-                }
-            </form>
+                                <div className="flex flex-col space-y-4">
+
+                                    <FormInput name='email' type='text' label="Email" />
+                                    <FormInput name='username' type='text' label='Username' />
+                                    <FormInput name='password' type='password' label='Password' />
+                                    <FormInput name='password2' type='password' label='Password confirmation' />
+
+                                    <Button disabled={props.isSubmitting} className='mt-2' type='submit'>Sign up</Button>
+                                </div>
+                                {/* You can handle and display errors here */}
+                            </form>
+                        )}
+                    </Formik>
+                </CardContent>
+            </Card>
         </main>
     );
 };

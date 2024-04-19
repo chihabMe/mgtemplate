@@ -6,11 +6,11 @@ import { Formik } from "formik"
 import { Button } from '@/components/ui/button';
 import FormInput from '@/components/ui/ٌFormInput';
 import { toFormikValidationSchema } from "zod-formik-adapter"
-import { SigninSchema } from '@/server/auth';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import { signinSchema } from '@/schemas/auth.schema';
 const initialForm = {
     email: "",
     password: "",
@@ -28,7 +28,7 @@ const SigninPage = () => {
                 <CardContent>
                     <Formik
                         initialValues={initialForm}
-                        validationSchema={toFormikValidationSchema(SigninSchema)}
+                        validationSchema={toFormikValidationSchema(signinSchema)}
                         onSubmit={async (values, actions) => {
 
                             const result = await signIn('credentials', {

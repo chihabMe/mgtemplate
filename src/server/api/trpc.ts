@@ -13,6 +13,7 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/lib/prisma";
+import ValidationError from "@/lib/validation.error";
 
 /**
  * 1. CONTEXT
@@ -46,12 +47,23 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 const t = initTRPC.context<typeof createTRPCContext>().create({
     transformer: superjson,
     errorFormatter({ shape, error }) {
+        console.log("------------errror-------")
+        console.log(error.cause?.message)
+        console.log(error.cause instanceof ValidationError)
+        console.log("------------errror-------")
+        let finalErrors = null
+        if (error.cause instanceof ZodError) {
+            finalErrors = new ValidationError()
+            const flaten = error.cause.flatten()
+            finalErrors.fieldErrors = flaten.fieldErrors;
+            finalErrors.formErrors = flaten.formErrors
+        }
+        finalErrors = error.cause
         return {
             ...shape,
             data: {
                 ...shape.data,
-                zodError:
-                    error.cause instanceof ZodError ? error.cause.flatten() : null,
+                errors: {hello:"hi"}
             },
         };
     },

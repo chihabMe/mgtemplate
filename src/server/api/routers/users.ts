@@ -1,17 +1,12 @@
 import { sendVerificationEmail } from "@/lib/email";
+import ValidationError from "@/lib/validation.error";
+import { createUserSchema } from "@/schemas/auth.schema";
 import { adminProtectedProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { generateVerificationToken } from "@/utils/auth";
 import { hashPassword } from "@/utils/passwords";
 import { getBaseUrl } from "@/utils/url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod"
-export const createUserSchema = z.object({
-    email: z.string().email(),
-    username: z.string().min(4).max(20),
-    password: z.string(),
-    password2: z.string(),
-
-})
 
 export const usersRouter = createTRPCRouter({
 
@@ -24,10 +19,14 @@ export const usersRouter = createTRPCRouter({
         if (exists) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
-                cause: {
-                    email: ["this email is been used"],
-                },
-                message: "Invalid fields"
+                cause: new ValidationError({
+                    fieldErrors: {
+                        email: ["This email is allready being used"],
+                        hi: ["hi"],
+                    }
+
+                }),
+                message: "Invalid fields",
 
             })
         }
